@@ -7,8 +7,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <EditorConfigFiles Include="D:\Projects\storage\Storage\Storage\.editorconfig" />
-  </ItemGroup>
-
 </Project>

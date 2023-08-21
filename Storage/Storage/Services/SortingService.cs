@@ -4,16 +4,9 @@ using Storage.Interfaces;
 namespace Storage.Services;
 internal class SortingService : ISortingService
 {
-    List<IPallet> _pallets;
-
-    public SortingService(IDataGenerationService dataGenerationService)
+    public List<ExpirationDatePallet> GroupByExpDateSortByItSortByWeight(List<IPallet> pallets)
     {
-        _pallets = dataGenerationService.GeneratePallets(); ;
-    }
-
-    public List<ExpirationDatePallet> GroupByExpDateSortByItSortByWeight()
-    {
-        var result = _pallets
+        var result = pallets
             .GroupBy(p => p.ExpirationDate)
             .Select(group =>
                         new {
@@ -27,9 +20,9 @@ internal class SortingService : ISortingService
         return result;
     }
 
-    public List<IPallet> TopPalletsSortByBoxExpDateSortByPalletVolume(int topNumber)
+    public List<IPallet> TopPalletsSortByBoxExpDateSortByPalletVolume(int topNumber, List<IPallet> pallets)
     {
-        var result = _pallets
+        var result = pallets
             .OrderBy(pallet => pallet.Boxes.Max(b => b.ExpirationDate))
             .OrderBy(pallet => pallet.Volume)
             .Take(topNumber)

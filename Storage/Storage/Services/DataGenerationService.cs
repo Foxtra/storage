@@ -5,17 +5,19 @@ namespace Storage.Services;
 internal class DataGenerationService : IDataGenerationService
 {
     private readonly Random _random;
+    private readonly IOutput _outputService;
 
-    public DataGenerationService()
+    public DataGenerationService(IOutput outputService)
     {
         _random = new Random();
+        _outputService = outputService;
     }
 
     public List<IPallet> GeneratePallets()
     {
         List<IPallet> Pallets = new List<IPallet>();
         //TODO use consts
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
             Pallets.Add(GeneratePallet(i));
         }
@@ -32,7 +34,7 @@ internal class DataGenerationService : IDataGenerationService
 
         List<IBox> boxes = new List<IBox>();
         //TODO use consts
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < 5; i++)
         {
             boxes.Add(GenerateBox(id: i, palletId: id));
         }
@@ -62,7 +64,7 @@ internal class DataGenerationService : IDataGenerationService
             expirationDate = GenerateDate();
         }
 
-        IBox box = new Box(id, palletId, width, height, depth, weight, productionDate, expirationDate);
+        IBox box = new Box(id, palletId, width, height, depth, weight, productionDate, expirationDate, _outputService);
 
         return box;
     }

@@ -62,4 +62,10 @@ internal class Box : IBox
     }
 
     public void SetPalletId(int id) => PalletId = id;
+
+    public override string ToString()
+    {
+        return $"ID: {Id}; PalletId: {PalletId}; Width: {Width}; Height: {Height}; Depth: {Depth};" +
+            $" Weight: {Weight:f1}; Volume: {Volume:f1}; ProductionDate: {ProductionDate}; ExpirationDate: {ExpirationDate:d}; ";
+    }
 }
