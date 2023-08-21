@@ -20,8 +20,13 @@ internal class Box : IBox
 
     public DateOnly ExpirationDate { get; private set; }
 
-    public Box(int id, int? palletId, double width, double height, double depth, double weight, DateOnly? productionDate, DateOnly? expirationDate)
+    private readonly IOutput _output;
+
+    //TODO Create ParamClass
+    public Box(int id, int? palletId, double width, double height, double depth, double weight, DateOnly? productionDate, DateOnly? expirationDate, IOutput OutputService)
     {
+        _output = OutputService;
+
         Id = id;
         PalletId = palletId;
 
@@ -50,9 +55,8 @@ internal class Box : IBox
             }
             catch (NullReferenceException ex)
             {
-                //TODO add OutputProvider
-                Console.WriteLine($"The Box with id:{Id} must contain ProductionDate or ExpirationDate");
-                Console.WriteLine(ex.Message);
+                _output.WriteString($"The Box with id:{Id} must contain ProductionDate or ExpirationDate");
+                _output.WriteString(ex.Message);
             }
         }
     }
