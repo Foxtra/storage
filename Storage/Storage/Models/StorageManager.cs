@@ -20,13 +20,15 @@ internal class StorageManager
 
         var firstSortingGroup = _sortingService.GroupByExpDateSortByItSortByWeight(data);
 
-        var secondSortingGroup = _sortingService.GroupByExpDateSortByItSortByWeight(data);
+        //TODO use consts
+        var secondSortingGroup = _sortingService.TopPalletsSortByBoxExpDateSortByPalletVolume(3, data);
 
         _outputService.WriteString("Group all pallets by expiration date, sort by expiration date, in each group sort pallets by weight:");
         _outputService.WriteEmptyLine();
         _outputService.WriteList(firstSortingGroup);
         _outputService.WriteEmptyLine();
         _outputService.WriteString("3 pallets that contain the boxes with the highest expiration date, sorted by volume:");
+        _outputService.WriteEmptyLine();
         _outputService.WriteList(secondSortingGroup);
         _outputService.WriteEmptyLine();
     }

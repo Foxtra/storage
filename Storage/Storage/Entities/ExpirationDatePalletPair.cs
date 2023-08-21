@@ -2,7 +2,7 @@
 using Storage.Interfaces;
 
 namespace Storage.Entities;
-internal class ExpirationDatePallet
+internal class ExpirationDatePalletPair
 {
     public DateOnly ExpirationDate { get; set; }
     public IOrderedEnumerable<IPallet> Pallet { get; set; }
@@ -14,9 +14,9 @@ internal class ExpirationDatePallet
         var stringBuilder = new StringBuilder(info);
         foreach (var p in Pallet)
         {
-            stringBuilder.Append($"ID: {p.Id}, ExpirationDate: {p.ExpirationDate}, Weight: {p.Weight}");
+            stringBuilder.Append($"ID: {p.Id}; ExpirationDate: {p.ExpirationDate:d}; Weight: {p.Weight:f1}; ");
         }
-        stringBuilder.Append(" ]");
+        stringBuilder.Append("]");
 
         return stringBuilder.ToString();
     }

@@ -17,7 +17,7 @@ internal class DataGenerationService : IDataGenerationService
     {
         List<IPallet> Pallets = new List<IPallet>();
         //TODO use consts
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             Pallets.Add(GeneratePallet(i));
         }
@@ -34,7 +34,7 @@ internal class DataGenerationService : IDataGenerationService
 
         List<IBox> boxes = new List<IBox>();
         //TODO use consts
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 50; i++)
         {
             boxes.Add(GenerateBox(id: i, palletId: id));
         }
@@ -72,9 +72,9 @@ internal class DataGenerationService : IDataGenerationService
     private DateOnly GenerateDate()
     {
         //TODO use consts
-        DateTime start = new DateTime(2023, 4, 5);
+        DateTime start = new DateTime(2023, 8, 1);
         int range = (DateTime.Today - start).Days;
-        start.AddDays(_random.Next(range));
-        return DateOnly.FromDateTime(start);
+        var newDate = start.AddDays(_random.Next(range));
+        return DateOnly.FromDateTime(newDate);
     }
 }
