@@ -15,23 +15,26 @@ internal class Pallet : IPallet
 
     public DateOnly ExpirationDate { get; private set; }
 
-    public Pallet(int id, double width, double height, double depth, double weight, List<IBox> boxes)
+    public Pallet(int id, double width, double height, double depth, List<IBox> boxes)
     {
         Id = id;
 
         Width = width < 0 ? 0 : width;
         Height = height < 0 ? 0 : height;
         Depth = depth < 0 ? 0 : depth;
-        Weight = weight < 0 ? 0 : weight;
 
         Boxes = boxes;
 
         foreach (var box in boxes)
         {
             Volume += box.Volume;
+            Weight += box.Weight;
         }
 
         Volume += Width * Height * Depth;
+        //TODO Move to parameters
+        Weight += 30;
+
 
         //What if Boxes.Count == 0?
         ExpirationDate = Boxes.Min(x => x.ExpirationDate);

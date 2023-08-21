@@ -20,7 +20,7 @@ internal class Box : IBox
 
     public DateOnly ExpirationDate { get; private set; }
 
-    public Box(int id, int? palletId, int width, int height, int depth, int weight, DateOnly? productionDate, DateOnly? expirationDate)
+    public Box(int id, int? palletId, double width, double height, double depth, double weight, DateOnly? productionDate, DateOnly? expirationDate)
     {
         Id = id;
         PalletId = palletId;
