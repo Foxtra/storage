@@ -1,4 +1,5 @@
-﻿using Storage.Interfaces;
+﻿using Storage.Entities;
+using Storage.Interfaces;
 using Storage.Parameters;
 
 namespace Storage.Models;
@@ -23,9 +24,9 @@ internal class StorageManager
     {
         List<IPallet> data = _dataGenerationService.GeneratePallets();
 
-        var firstSortingGroup = _sortingService.GroupByExpDateSortByItSortByWeight(data);
+        List<ExpirationDatePalletPair> firstSortingGroup = _sortingService.GroupByExpDateSortByItSortByWeight(data);
 
-        var secondSortingGroup = _sortingService.TopPalletsSortByBoxExpDateSortByPalletVolume(_storageParameters.TopThree, data);
+        List<PalletWithHighExpDateBox> secondSortingGroup = _sortingService.TopPalletsSortByBoxExpDateSortByPalletVolume(_storageParameters.TopThree, data);
 
         _outputService.WriteString("Group all pallets by expiration date, sort by expiration date, in each group sort pallets by weight:");
         _outputService.WriteEmptyLine();

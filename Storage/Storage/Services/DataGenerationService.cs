@@ -16,7 +16,7 @@ internal class DataGenerationService : IDataGenerationService
 
     public List<IPallet> GeneratePallets()
     {
-        List<IPallet> Pallets = new List<IPallet>();
+        var Pallets = new List<IPallet>();
 
         for (int i = 0; i < _storageParameters.NumberOfPallets; i++)
         {
@@ -32,13 +32,13 @@ internal class DataGenerationService : IDataGenerationService
         double height = _random.NextDouble() * _storageParameters.MaxPalletHeight;
         double depth = _random.NextDouble() * _storageParameters.MaxPalletDepth;
 
-        List<IBox> boxes = new List<IBox>();
+        var boxes = new List<IBox>();
         for (int i = 0; i < _storageParameters.NumberOfBoxes; i++)
         {
             boxes.Add(GenerateBox(id: i, palletId: id, width, depth));
         }
 
-        PalletParameters palletParameters = new PalletParameters(id, width, height, depth, boxes); 
+        PalletParameters palletParameters = new PalletParameters(id, width, height, depth, boxes);
 
         IPallet pallet = new Pallet(palletParameters, _storageParameters);
 
@@ -58,7 +58,7 @@ internal class DataGenerationService : IDataGenerationService
         {
             depth = _random.NextDouble() * _storageParameters.MaxBoxDepth;
         } while (depth > maxDepth);
-       
+
         double height = _random.NextDouble() * _storageParameters.MaxBoxHeight;
         double weight = _random.NextDouble() * _storageParameters.MaxBoxWeight;
 

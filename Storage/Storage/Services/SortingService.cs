@@ -9,7 +9,8 @@ internal class SortingService : ISortingService
         var result = pallets
             .GroupBy(p => p.ExpirationDate)
             .Select(group =>
-                        new {
+                        new
+                        {
                             ExpirationDate = group.Key,
                             Pallets = group.OrderBy(x => x.Weight)
                         })
