@@ -1,23 +1,24 @@
 ﻿using Storage.Interfaces;
 using Storage.Models;
+using Storage.Parameters;
 
 namespace Storage.Services;
 internal class DataGenerationService : IDataGenerationService
 {
     private readonly Random _random;
-    private readonly IOutput _outputService;
+    private readonly StorageParameters _storageParameters;
 
-    public DataGenerationService(IOutput outputService)
+    public DataGenerationService(IStorageParametersProvider parametersProvider)
     {
         _random = new Random();
-        _outputService = outputService;
+        _storageParameters = parametersProvider.GetParameters();
     }
 
     public List<IPallet> GeneratePallets()
     {
         List<IPallet> Pallets = new List<IPallet>();
-        //TODO use consts
-        for (int i = 0; i < 50; i++)
+
+        for (int i = 0; i < _storageParameters.NumberOfPallets; i++)
         {
             Pallets.Add(GeneratePallet(i));
         }
@@ -27,30 +28,39 @@ internal class DataGenerationService : IDataGenerationService
 
     private IPallet GeneratePallet(int id)
     {
-        //TODO use consts
-        double width = _random.NextDouble() * 100;
-        double height = _random.NextDouble() * 100;
-        double depth = _random.NextDouble() * 100;
+        double width = _random.NextDouble() * _storageParameters.MaxPalletWidth;
+        double height = _random.NextDouble() * _storageParameters.MaxPalletHeight;
+        double depth = _random.NextDouble() * _storageParameters.MaxPalletDepth;
 
         List<IBox> boxes = new List<IBox>();
-        //TODO use consts
-        for (int i = 0; i < 50; i++)
+        for (int i = 0; i < _storageParameters.NumberOfBoxes; i++)
         {
-            boxes.Add(GenerateBox(id: i, palletId: id));
+            boxes.Add(GenerateBox(id: i, palletId: id, width, depth));
         }
 
-        IPallet pallet = new Pallet(id, width, height, depth, boxes);
+        PalletParameters palletParameters = new PalletParameters(id, width, height, depth, boxes); 
+
+        IPallet pallet = new Pallet(palletParameters, _storageParameters);
 
         return pallet;
     }
 
-    private IBox GenerateBox(int id, int palletId)
+    private IBox GenerateBox(int id, int palletId, double maxWidth, double maxDepth)
     {
-        //TODO use consts
-        double width = _random.NextDouble() * 100;
-        double height = _random.NextDouble() * 100;
-        double depth = _random.NextDouble() * 100;
-        double weight = _random.NextDouble() * 100;
+        double width;
+        do
+        {
+            width = _random.NextDouble() * _storageParameters.MaxBoxWidth;
+        } while (width > maxWidth);
+
+        double depth;
+        do
+        {
+            depth = _random.NextDouble() * _storageParameters.MaxBoxDepth;
+        } while (depth > maxDepth);
+       
+        double height = _random.NextDouble() * _storageParameters.MaxBoxHeight;
+        double weight = _random.NextDouble() * _storageParameters.MaxBoxWeight;
 
         DateOnly? productionDate = null;
         DateOnly? expirationDate = null;
@@ -64,15 +74,16 @@ internal class DataGenerationService : IDataGenerationService
             expirationDate = GenerateDate();
         }
 
-        IBox box = new Box(id, palletId, width, height, depth, weight, productionDate, expirationDate, _outputService);
+        BoxParameters boxParameters = new BoxParameters(id, palletId, width, height, depth, weight, productionDate, expirationDate);
+
+        IBox box = new Box(boxParameters, _storageParameters);
 
         return box;
     }
 
     private DateOnly GenerateDate()
     {
-        //TODO use consts
-        DateTime start = new DateTime(2023, 8, 1);
+        DateTime start = _storageParameters.StartDate;
         int range = (DateTime.Today - start).Days;
         var newDate = start.AddDays(_random.Next(range));
         return DateOnly.FromDateTime(newDate);

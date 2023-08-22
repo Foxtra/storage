@@ -22,9 +22,19 @@ internal class SortingService : ISortingService
 
     public List<PalletWithHighExpDateBox> TopPalletsSortByBoxExpDateSortByPalletVolume(int topNumber, List<IPallet> pallets)
     {
+        DateOnly maxExpirationDate;
+        try
+        {
+            maxExpirationDate = pallets.Max(p => p.Boxes.Max(b => b.ExpirationDate));
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException($"No Pallets", ex);
+        }
+
         var result = pallets
-            .OrderBy(pallet => pallet.Boxes.Max(b => b.ExpirationDate))
-            .ThenBy(pallet => pallet.Volume)
+            .FindAll(pallet => pallet.Boxes.Any(b => b.ExpirationDate == maxExpirationDate))
+            .OrderBy(pallet => pallet.Volume)
             .Select(x => new PalletWithHighExpDateBox { Pallet = x })
             .Take(topNumber)
             .ToList();

@@ -1,4 +1,5 @@
 ﻿using Storage.Interfaces;
+using Storage.Parameters;
 
 namespace Storage.Models;
 internal class Box : IBox
@@ -20,48 +21,43 @@ internal class Box : IBox
 
     public DateOnly ExpirationDate { get; private set; }
 
-    private readonly IOutput _output;
+    private readonly StorageParameters _storageParameters;
 
-    //TODO Create ParamClass
-    public Box(int id, int? palletId, double width, double height, double depth, double weight, DateOnly? productionDate, DateOnly? expirationDate, IOutput OutputService)
+    public Box(BoxParameters boxParameters, StorageParameters storageParameters)
     {
-        _output = OutputService;
+        _storageParameters = storageParameters;
 
-        Id = id;
-        PalletId = palletId;
+        Id = boxParameters.Id;
+        PalletId = boxParameters.PalletId;
 
-        Width = width < 0 ? 0 : width;
-        Height = height < 0 ? 0 : height;
-        Depth = depth < 0 ? 0 : depth;
-        Weight = weight < 0 ? 0 : weight;
+        Width = boxParameters.Width < 0 ? 0 : boxParameters.Width;
+        Height = boxParameters.Width < 0 ? 0 : boxParameters.Width;
+        Depth = boxParameters.Width < 0 ? 0 : boxParameters.Width;
+        Weight = boxParameters.Width < 0 ? 0 : boxParameters.Width;
 
         Volume = Width * Height * Depth;
 
-        if (productionDate != null)
+        if (boxParameters.ProductionDate != null)
         {
-            ProductionDate = productionDate;
+            ProductionDate = boxParameters.ProductionDate;
         }
 
-        if (expirationDate != null)
+        if (boxParameters.ExpirationDate != null)
         {
-            ExpirationDate = (DateOnly)expirationDate;
+            ExpirationDate = (DateOnly)boxParameters.ExpirationDate;
         }
         else
         {
-            //TODO move to parameters or const
             try
             {
-                ExpirationDate = ((DateOnly)ProductionDate).AddDays(100);
+                ExpirationDate = ((DateOnly)ProductionDate).AddDays(_storageParameters.ExpirationDateDelta);
             }
             catch (NullReferenceException ex)
             {
-                _output.WriteString($"The Box with id:{Id} must contain ProductionDate or ExpirationDate");
-                _output.WriteString(ex.Message);
+                throw new NullReferenceException($"The Box with id:{Id} must contain ProductionDate or ExpirationDate", ex);
             }
         }
     }
-
-    public void SetPalletId(int id) => PalletId = id;
 
     public override string ToString()
     {

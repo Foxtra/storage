@@ -8,11 +8,12 @@ namespace Storage
     {
         static void Main(string[] args)
         {
-            IOutput outputService = new ConsoleOutputService();
-            IDataGenerationService dataGenerationService = new DataGenerationService(outputService);
+            IStorageParametersProvider parametersProvider = new StorageParametersProvider();
+            IDataGenerationService dataGenerationService = new DataGenerationService(parametersProvider);
             ISortingService sortingService = new SortingService();
+            IOutput outputService = new ConsoleOutputService();
 
-            var storageManager = new StorageManager(dataGenerationService, sortingService, outputService);
+            var storageManager = new StorageManager(dataGenerationService, sortingService, outputService, parametersProvider);
 
             storageManager.Run();
         }

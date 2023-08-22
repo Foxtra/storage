@@ -10,6 +10,4 @@ internal interface IBox
     public double Volume { get; }
     public DateOnly? ProductionDate { get; }
     public DateOnly ExpirationDate { get; }
-
-    public void SetPalletId(int id);
 }

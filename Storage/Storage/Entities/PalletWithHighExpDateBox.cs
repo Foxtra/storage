@@ -7,7 +7,7 @@ internal class PalletWithHighExpDateBox
 
     public override string ToString()
     {
-        var info = $"ID: {Pallet.Id}; Volume: {Pallet.Volume:f1}; Box's Exp Date: {Pallet.Boxes.Max(x => x.ExpirationDate):d}";
+        var info = $"ID: {Pallet.Id}; Volume: {Pallet.Volume:f4}; Box's Exp Date: {Pallet.Boxes.Max(x => x.ExpirationDate):d}";
 
         return info;
     }

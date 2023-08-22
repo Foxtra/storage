@@ -1,4 +1,5 @@
 ﻿using Storage.Interfaces;
+using Storage.Parameters;
 
 namespace Storage.Models;
 internal class StorageManager
@@ -6,12 +7,16 @@ internal class StorageManager
     private readonly IDataGenerationService _dataGenerationService;
     private readonly ISortingService _sortingService;
     private readonly IOutput _outputService;
+    private readonly IStorageParametersProvider _parametersProvider;
+    private readonly StorageParameters _storageParameters;
 
-    public StorageManager(IDataGenerationService dataGenerationService, ISortingService sortingService, IOutput outputService)
+    public StorageManager(IDataGenerationService dataGenerationService, ISortingService sortingService, IOutput outputService, IStorageParametersProvider parametersProvider)
     {
         _dataGenerationService = dataGenerationService;
         _sortingService = sortingService;
         _outputService = outputService;
+        _parametersProvider = parametersProvider;
+        _storageParameters = _parametersProvider.GetParameters();
     }
 
     public void Run()
@@ -20,8 +25,7 @@ internal class StorageManager
 
         var firstSortingGroup = _sortingService.GroupByExpDateSortByItSortByWeight(data);
 
-        //TODO use consts
-        var secondSortingGroup = _sortingService.TopPalletsSortByBoxExpDateSortByPalletVolume(3, data);
+        var secondSortingGroup = _sortingService.TopPalletsSortByBoxExpDateSortByPalletVolume(_storageParameters.TopThree, data);
 
         _outputService.WriteString("Group all pallets by expiration date, sort by expiration date, in each group sort pallets by weight:");
         _outputService.WriteEmptyLine();

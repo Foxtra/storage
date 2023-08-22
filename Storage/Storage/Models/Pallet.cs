@@ -1,44 +1,50 @@
 ﻿using System.Text;
 using Storage.Interfaces;
+using Storage.Parameters;
 
 namespace Storage.Models;
 internal class Pallet : IPallet
 {
     public int Id { get; private set; }
-
     public double Width { get; }
     public double Height { get; }
     public double Depth { get; }
     public double Weight { get; }
     public double Volume { get; }
-
     public List<IBox> Boxes { get; private set; }
-
     public DateOnly ExpirationDate { get; private set; }
 
-    public Pallet(int id, double width, double height, double depth, List<IBox> boxes)
+    private readonly StorageParameters _storageParameters;
+
+    public Pallet(PalletParameters palletParameters, StorageParameters storageParameters)
     {
-        Id = id;
+        _storageParameters = storageParameters;
+        Id = palletParameters.Id;
 
-        Width = width < 0 ? 0 : width;
-        Height = height < 0 ? 0 : height;
-        Depth = depth < 0 ? 0 : depth;
+        Width = palletParameters.Width < 0 ? 0 : palletParameters.Width;
+        Height = palletParameters.Width < 0 ? 0 : palletParameters.Width;
+        Depth = palletParameters.Width < 0 ? 0 : palletParameters.Width;
 
-        Boxes = boxes;
+        Boxes = palletParameters.Boxes;
 
-        foreach (var box in boxes)
+        foreach (var box in Boxes)
         {
             Volume += box.Volume;
             Weight += box.Weight;
         }
 
         Volume += Width * Height * Depth;
-        //TODO Move to parameters
-        Weight += 30;
 
+        Weight += _storageParameters.PalletWeight;
 
-        //What if Boxes.Count == 0?
-        ExpirationDate = Boxes.Min(x => x.ExpirationDate);
+        try
+        {
+            ExpirationDate = Boxes.Min(x => x.ExpirationDate);
+        }
+        catch (InvalidOperationException ex)
+        {
+            throw new InvalidOperationException($"Pallet with ID:{Id} has no Boxes", ex);
+        }
     }
 
     public override string ToString()

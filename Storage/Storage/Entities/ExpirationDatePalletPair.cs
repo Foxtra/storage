@@ -14,7 +14,7 @@ internal class ExpirationDatePalletPair
         var stringBuilder = new StringBuilder(info);
         foreach (var p in Pallet)
         {
-            stringBuilder.Append($"ID: {p.Id}; ExpirationDate: {p.ExpirationDate:d}; Weight: {p.Weight:f1}; ");
+            stringBuilder.Append($"ID: {p.Id}, Weight: {p.Weight:f1}; ");
         }
         stringBuilder.Append("]");
 

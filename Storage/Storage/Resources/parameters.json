@@ -1,0 +1,15 @@
+{
+    "ExpirationDateDelta": 100,
+    "PalletWeight": 30,
+    "NumberOfPallets": 100,
+    "NumberOfBoxes": 50,
+    "MaxPalletWidth": 30,
+    "MaxPalletHeight": 30,
+    "MaxPalletDepth": 30,
+    "MaxBoxWidth": 15,
+    "MaxBoxHeight": 15,
+    "MaxBoxDepth": 15,
+    "MaxBoxWeight": 15,
+    "StartDate": "2023-08-01",
+    "TopThree": 3
+}
